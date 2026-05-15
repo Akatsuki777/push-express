@@ -1,0 +1,7 @@
+python-dotenv
+requests
+fastapi[standard]
+pydantic
+uvicorn
+pywebpush
+py-vapid
