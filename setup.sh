@@ -50,3 +50,15 @@ EOF
 else
     echo "$ENV_FILE file already exists and is not empty. Skipping key generation."
 fi
+
+if [ ! $(find . -type d -name "backup") ]; then
+
+    echo "No backup folder found! Creating required folder/files..."
+
+    mkdir "backup"
+    touch backup/curDraw.json
+    echo {} > backup/curDraw.json
+
+    echo "Successfully created the folder/files..."
+
+fi
