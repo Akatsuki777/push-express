@@ -4,3 +4,4 @@ backup/*
 logs/*
 rm_pycache.sh
 *.db
+.vscode
