@@ -5,3 +5,5 @@ pydantic
 uvicorn
 pywebpush
 py-vapid
+sqlalchemy
+alembic

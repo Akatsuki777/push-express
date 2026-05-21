@@ -30,7 +30,7 @@ def setup_logger():
     #Add fh to logger
     logger.addHandler(fh)
 
-    logger.info('********LOGGING INITIATED********')
+    logger.info(f'********LOGGING INITIATED {session_id}********')
 
     return logger
 

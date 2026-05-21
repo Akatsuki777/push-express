@@ -10,18 +10,21 @@ if [ ! -d "$ENV" ]; then
     echo "Successfully created the environment"
 fi
 
-if [ ! "$VIRTUAL_ENV" ];then
+if [ ! "$VIRTUAL_ENV" ]; then
     echo "Switching to the virtual environment"
     source "$ENV/bin/activate"
+
 else
-    echo "All dependencies installed"
+    echo "Already in the virtual environment"
 fi
 
-if ! pip check requirements.txt > /dev/null 2>&1; then 
+if ! python3 -m pip check requirements.txt > /dev/null 2>&1; then 
     echo "Installing requirements..."
     python3 -m pip install --upgrade pip 1>/dev/null
     python3 -m pip install -r requirements.txt 1>/dev/null
     echo "Installed all dependencies"
+else
+    echo "All dependencies are already installed"
 fi
 
 if [ ! -f "$ENV_FILE" ] || [ ! -s "$ENV_FILE"  ];then
@@ -44,4 +47,6 @@ EOF
 
     echo "Setup Completed!"
 
+else
+    echo "$ENV_FILE file already exists and is not empty. Skipping key generation."
 fi

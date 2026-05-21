@@ -1,24 +1,28 @@
 import requests
+import re
 import json
 import hashlib
-from dotenv import load_dotenv
-from constants import Constants
+import constants
+from datetime import datetime
+from pathlib import Path
+
+BACKUP_DIR = Path(__file__).resolve().parents[1] / "backup"
 
 def check_draw(logger):
     
     try:
-        r = requests.get(Constants.DRAW_URL)
-        if r.status_code() == 200:
-            with open('../backup/curDraw','r') as f:
+        r = requests.get(constants.DRAW_URL)
+        if r.status_code == 200:
+            with open(BACKUP_DIR / 'curDraw','r') as f:
                 cur_hash = f.readline()
             
             new_hash = json_hash(r.json())
 
             if (new_hash != cur_hash):
-                with open('../backup/curDraw','w') as f:
+                with open(BACKUP_DIR / 'curDraw','w') as f:
                     f.writelines(new_hash)
                 
-                with open('../backup/curDraw.json','w') as f:
+                with open(BACKUP_DIR / 'curDraw.json','w') as f:
                     json.dump(r.json(),f)
 
                 return get_score_details(r.json())
@@ -38,8 +42,22 @@ def get_score_details(json_val):
 
     base_val = json_val['rounds'][0]
 
+    normalized_pgm_name = normalize_name(base_val['drawName'])
+    program_name = constants.PROGRAM_NAMES.get(normalized_pgm_name,'UKN')
+    draw_date = datetime.strptime(base_val['drawDate'],'%Y-%m-%d').strftime('%m/%d/%Y')
+
     return {
-        'program': base_val['drawName'],
+        'program': program_name,
         'score': base_val['drawCRS'],
-        'count': base_val['drawSize']
+        'date': draw_date
     }
+
+def normalize_name(program_name):
+
+    reString = r'([A-Za-z \-]+)'
+    matches = re.match(reString,program_name)
+
+    if (matches):
+        return matches.group(1)
+    else:
+        program_name
