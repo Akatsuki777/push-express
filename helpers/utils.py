@@ -16,7 +16,7 @@ def grab_env_var(key):
     if not os.getenv(key):
         load_dotenv()
 
-    return os.getenv(key)
+    return os.getenv(key,None)
 
 # This is the background_loop that continuosly polls the 
 # IRCC json file to check for draws and then initiates 
