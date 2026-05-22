@@ -87,5 +87,5 @@ def get_public_key():
 
 @app.post('/subscribe')
 def add_subscriber(subscription: dict, db: Session = Depends(get_db)):
-    save_subscription(db,subscription)
+    save_subscription(db,subscription,logger=logger)
     return {"success":True}

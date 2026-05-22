@@ -19,7 +19,7 @@ BACKUP_DIR = Path(__file__).resolve().parents[1] / "backup"
 # and returns False if there is no change. It returns the score data if 
 # a change is observed.
 
-def check_draw(logger):
+def check_draw(logger=None):
     
     try:
         r = requests.get(constants.DRAW_URL)
@@ -35,6 +35,9 @@ def check_draw(logger):
 
             if (new_hash != cur_hash):
 
+                if logger:
+                    logger.info(f"New Draw has been found! Processing it.")
+
                 with open(BACKUP_DIR / 'curDraw','w') as f:
                     f.writelines(new_hash)
                 
@@ -44,7 +47,8 @@ def check_draw(logger):
                 return get_score_details(r.json())
 
     except requests.exceptions.RequestException as e:
-        logger.error(f"An exception occurred: {e}")
+        if logger:
+            logger.error(f"An exception occurred: {e}")
     
     return False
     

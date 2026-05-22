@@ -27,6 +27,6 @@ async def background_loop(logger=None):
     while True:
         is_draw = check_draw(logger)
         if is_draw:
-            notify(is_draw)
+            notify(is_draw,logger)
 
         await asyncio.sleep(constants.TIMER)

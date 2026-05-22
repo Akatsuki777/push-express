@@ -16,7 +16,10 @@ VAPID_EMAIL = grab_env_var("EMAIL")
 
 # Adds a new subscription into the database
 
-def save_subscription(db,subscription):
+def save_subscription(db,subscription,logger=None):
+
+    if logger:
+        logger.info(f"New subscription with endpoint: {subscription["endpoint"]}")
 
     endpoint= subscription['endpoint']
     keys= subscription['keys']
@@ -45,7 +48,7 @@ def save_subscription(db,subscription):
 # subscribers in the database. isdraw is the variable that contains 
 # the details of the draw.
 
-def notify(isdraw):
+def notify(isdraw,logger):
 
     db = SessionLocal()
 
@@ -76,7 +79,14 @@ def notify(isdraw):
                         "sub": VAPID_EMAIL
                     },
                 )
+
+                if logger:
+                    logger.info(f"The notification has been successfully sent out.")
+
             except WebPushException as ex:
+
+                if logger:
+                    logger.info(f"Encountered error when trying to push the notification: {ex}")
 
                 #Handle expired subscription
                 db.delete(sub)
