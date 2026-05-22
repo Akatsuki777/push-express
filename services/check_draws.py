@@ -2,6 +2,7 @@
 # polls on IRCC json file looking for changes.
 
 import requests
+import os
 import re
 import json
 import hashlib
@@ -23,12 +24,17 @@ def check_draw(logger):
     try:
         r = requests.get(constants.DRAW_URL)
         if r.status_code == 200:
-            with open(BACKUP_DIR / 'curDraw','r') as f:
-                cur_hash = f.readline()
+
+            cur_hash = None
+
+            if os.path.isfile(BACKUP_DIR / 'curDraw'):
+                with open(BACKUP_DIR / 'curDraw','r') as f:
+                    cur_hash = f.readline()
             
             new_hash = json_hash(r.json())
 
             if (new_hash != cur_hash):
+
                 with open(BACKUP_DIR / 'curDraw','w') as f:
                     f.writelines(new_hash)
                 
