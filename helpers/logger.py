@@ -1,3 +1,7 @@
+# This sets up a central logging instance to be used across 
+# the api to maintain logs that are initiated every new start 
+# of the app.
+
 import logging
 import os
 from datetime import datetime

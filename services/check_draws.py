@@ -1,3 +1,6 @@
+# This script contains the functions that help and perform the 
+# polls on IRCC json file looking for changes.
+
 import requests
 import re
 import json
@@ -6,7 +9,14 @@ import constants
 from datetime import datetime
 from pathlib import Path
 
+# Sets up relative structure of the backup folder from this file.
+
 BACKUP_DIR = Path(__file__).resolve().parents[1] / "backup"
+
+# Requests the URL of the json, generate the hash for the current json
+# and compares it with the latest one that is present in the backup folder
+# and returns False if there is no change. It returns the score data if 
+# a change is observed.
 
 def check_draw(logger):
     
@@ -32,11 +42,16 @@ def check_draw(logger):
     
     return False
     
+# It returns a hash of a json object after normalizing it.
+
 def json_hash(json_object):
 
     normalized = json.dumps(json_object,sort_keys=True,separators=(',',':'))
 
     return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+
+# This grabs the data from the json and returns the required
+# data in the right format.
 
 def get_score_details(json_val):
 
@@ -51,6 +66,10 @@ def get_score_details(json_val):
         'score': base_val['drawCRS'],
         'date': draw_date
     }
+
+# A helper function that takes the program name and
+# strips away everything except the actual name of the
+# program.
 
 def normalize_name(program_name):
 

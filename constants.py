@@ -1,4 +1,5 @@
-import os
+# This file organizes all the important constants.
+
 from dotenv import load_dotenv
 from helpers.utils import grab_env_var
 

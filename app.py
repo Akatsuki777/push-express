@@ -1,3 +1,5 @@
+# Main app
+
 from fastapi import FastAPI, Depends
 import asyncio
 import os
@@ -28,7 +30,9 @@ def get_db():
 #Initiates Logger
 logger = setup_logger()
 
-     
+# Sets the lifespan of the app which will start the background_loop 
+# before the app starts and then stop it when quitting.
+
 @asynccontextmanager
 async def lifespan(app):
 
@@ -44,14 +48,19 @@ async def lifespan(app):
     except asyncio.CancelledError:
         pass
 
+# Initiate the FastAPI instance
 app = FastAPI(lifespan=lifespan)
 
+# Allow cross origin access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=['*'],
     allow_headers=['*']
 )                  
+
+# Get the latest available data on the draws. 
+# Returns error if data not available.
 
 @app.get('/get_data')
 def get_data():
@@ -68,9 +77,13 @@ def get_data():
 
     return {'message':'Cannot access data!'}
 
+# Getter for the vapid_key
+
 @app.get('/vapid_key')
 def get_public_key():
     return {"publicKey":constants.PUBLIC_KEY}
+
+# Endpoint that initiates the subscription process.
 
 @app.post('/subscribe')
 def add_subscriber(subscription: dict, db: Session = Depends(get_db)):

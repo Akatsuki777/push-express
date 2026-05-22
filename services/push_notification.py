@@ -1,3 +1,6 @@
+# Service that handles all the aspects of subscription management 
+# and notification delivery
+
 import json
 from datetime import datetime, timezone
 from models.subscriptions import PushSubscription
@@ -5,9 +8,13 @@ from pywebpush import webpush, WebPushException
 from database import SessionLocal
 from helpers.utils import grab_env_var
 
+# Grab all the required variables.
+
 VAPID_PRIVATE_KEY = grab_env_var("PRIVATE_KEY")
 VAPID_PUBLIC_KEY = grab_env_var("PUBLIC_KEY")
 VAPID_EMAIL = grab_env_var("EMAIL")
+
+# Adds a new subscription into the database
 
 def save_subscription(db,subscription):
 
@@ -34,6 +41,9 @@ def save_subscription(db,subscription):
 
     return sub
 
+# This is the function that sends out a notification to all
+# subscribers in the database. isdraw is the variable that contains 
+# the details of the draw.
 
 def notify(isdraw):
 
@@ -73,6 +83,3 @@ def notify(isdraw):
                 db.commit()
     finally:
         db.close()
-    
-
-    

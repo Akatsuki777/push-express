@@ -1,5 +1,7 @@
-import re
+# Helper script that would open the .pem files and extract the 
+# vapid keys then return them out as a single string separated by space.
 
+import re
 
 PATTERN = r"-----BEGIN[A-Z, ]+-----(.*)-----END[A-Z, ]+-----"
 
